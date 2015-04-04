@@ -110,7 +110,6 @@ class LoginModel {
         //Check if username contains invalid characters
         if(preg_match($validChars, $username))
         {
-            //$clearForRegistration = false;
             $this->notify->error('Username contains illegal characters.');
             $loginOutcome = false;
         }
@@ -151,5 +150,15 @@ class LoginModel {
             return false;
 
         return $user->getRole() == ROLE::$ADMIN;
+    }
+
+    public function IsModOrHigher()
+    {
+        $user = $this->getUserFromDb($this->getUsername());
+
+        if ($user == null)
+            return false;
+
+        return $user->getRole() == ROLE::$ADMIN || $user->getRole() == ROLE::$MODERATOR;
     }
 }

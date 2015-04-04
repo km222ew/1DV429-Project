@@ -34,7 +34,7 @@ class Response
                       <div class='row'>
                       	<div class='col-lg-10'>
 	                      <ul class='nav nav-pills'>
-							  <li role='presentation'><a href='#'>Forum</a></li>
+							  <li role='presentation'><a href='?action=".NavigationView::$actionForum."'>Forum</a></li>
 							  <li role='presentation'><a href='?action=".NavigationView::$actionShowProfile."'>Profile</a></li>";
 							  if ($isAdmin)
 							  {
@@ -59,6 +59,7 @@ class Response
                     $body
 				    <br />
 				    <hr>
+				    <center>Made by Hampus Karlsson (HK222GN) and Kevin Madsen (KM222EW)</center>
 				</div>
 				<script src='https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js'></script>
 				<script src='https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js'></script>

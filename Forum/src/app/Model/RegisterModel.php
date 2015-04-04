@@ -27,10 +27,10 @@ class RegisterModel
             $this->notify->error('Passwords does not match');
         }
 
-        if(strlen($username) < 3)
+        if(strlen($username) < 3 || strlen($username) > 25)
         {
             $clearForRegistration = false;
-            $this->notify->error('Username needs at least 3 characters');
+            $this->notify->error('Username needs at least 3 characters and 25 at max.');
         }
 
         if(strlen($password) < 6)

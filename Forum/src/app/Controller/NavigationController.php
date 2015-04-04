@@ -3,6 +3,7 @@
 require_once('LoginController.php');
 require_once('ProfileController.php');
 require_once('AdminController.php');
+require_once('ForumController.php');
 require_once('src/app/Model/LoginModel.php');
 require_once('src/app/View/LoginView.php');
 require_once('src/app/View/LoginView.php');
@@ -52,6 +53,13 @@ class NavigationController
                         }
                         return $loginController->doLogin();
                         break;
+                    case NavigationView::$actionForum:
+                    case NavigationView::$actionTopic:
+                    case NavigationView::$actionCreateThread:
+                        $controller = new ForumController($notify, $userRep);
+
+                        return $controller->ShowForum($this->IsModOrHigher(), $username);
+                        break;
                     case NavigationView::$actionShowAllUsers:
                         $controller = new AdminController($notify, $userRep);
 
@@ -60,19 +68,6 @@ class NavigationController
                             
                             return $controller->ShowAllUsers();
                         }
-
-                    // case NavigationView::$actionPlay:
-                    //     $controller = new GameController($notify, $userRep);
-
-                    //     if($controller->isTriviaNull())
-                    //     {
-                    //         $controller = new ProfileController($notify, $userRep);
-                    //         return $controller->showProfile($username);
-                    //     }
-                    //     else
-                    //     {
-                    //         return $controller->showGameField($username);
-                    //     }
                     default:
                         $controller = new ProfileController($notify, $userRep);
                         return $controller->showProfile($username);
@@ -101,5 +96,10 @@ class NavigationController
     public function IsAdmin()
     {
         return $this->loginModel->IsUserAdmin();
+    }
+
+    public function IsModOrHigher()
+    {
+        return $this->loginModel->IsModOrHigher();
     }
 }

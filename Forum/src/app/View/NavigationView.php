@@ -8,8 +8,9 @@ class NavigationView
     public static $actionLogout = "logout";
     public static $actionRegister = "register";
     public static $actionShowAllUsers = "show_all_users";
-    public static $actionPlay = "play";
-    public static $actionSubmitAnswer = "answer";
+    public static $actionTopic = "topic";
+    public static $actionForum = "forum";
+    public static $actionCreateThread = "create_thread";
 
     public static function getAction()
     {

@@ -10,4 +10,14 @@ class ForumModel
         $this->notify = $notify;
         $this->userRep = $userRep;
     }
+
+    public function GetAllThreads()
+    {
+    	return $this->userRep->GetForumThreads();
+    }
+
+    public function CreateThread($thread, $reply)
+    {
+    	$this->userRep->CreateThread($thread, $reply);
+    }
 }

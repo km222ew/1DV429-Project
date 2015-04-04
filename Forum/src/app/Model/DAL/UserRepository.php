@@ -8,6 +8,8 @@ class UserRepository extends Repository
     private $dbTable;
     private $dbTableRole;
     private $dbTableLoginLog;
+    private $dbTableThread;
+    private $dbTableThreadReply;
 
     //Db columns 'user'
     private static $username = "username";
@@ -23,11 +25,24 @@ class UserRepository extends Repository
     private static $time = "time";
     private static $outcome = "outcome";
 
+    //DB columns 'thread'
+    private static $topic = "topic";
+    private static $creator = "creator";
+    private static $creation_time = "creation_time";
+
+    //DB columns 'thread_reply'
+    private static $thread_id = "thread_id";
+    private static $body = "body";
+    private static $user = "user";
+    private static $reply_time = "reply_time";
+
     public function __construct()
     {
         $this->dbTable = "user";
         $this->dbTableRole = "user_role";
         $this->dbTableLoginLog = "user_login_log";
+        $this->dbTableThread = "thread";
+        $this->dbTableThreadReply = "thread_reply";
         $this->db = $this->connectionUser();
     }
 
@@ -226,5 +241,114 @@ class UserRepository extends Repository
         {
             die("An error has occurred. Error code 555");
         }
+    }
+
+    //Forum part
+    public function CreateThread(Thread $thread, Reply $reply)
+    {
+        try
+        {
+            $sql = "INSERT INTO $this->dbTableThread (". self::$topic . ", " . self::$creator . ") VALUES (?, ?)";
+            $params = array($thread->GetTopic(), $thread->GetCreator());
+
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+
+            $thread_id = $this->db->lastInsertId();
+
+            $sql = "INSERT INTO $this->dbTableThreadReply (". self::$thread_id . ", " . self::$body . ", " . self::$user . ") VALUES (?, ?, ?)";
+            $params = array($thread_id, $reply->GetBody(), $reply->GetUser());
+
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+
+            return $thread_id;
+        }
+        catch(PDOException $e)
+        {
+            echo $e->getMessage();
+            die("An error has occurred. Error code 267");
+        }
+    }
+
+    public function GetForumThreads()
+    {
+        try
+        {
+            $sql = "SELECT * FROM $this->dbTableThread ORDER BY " . self::$creation_time . " DESC";
+
+            $query = $this->db->prepare($sql);
+            $query->execute();  
+
+            $result = $query->fetchAll();
+
+            if (!$result)
+                return null;
+
+            $threads = Array();
+
+            foreach($result as $row)
+            {
+                $thread = new Thread($row[self::$thread_id], $row[self::$topic], $row[self::$creator]);
+                array_push($threads, $thread);
+            }
+
+            return $threads;
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 797");
+        }
+    }
+
+    public function RemoveThread()
+    {
+
+    }
+
+    public function GetThread()
+    {
+
+    }
+
+    public function GetRepliesOnThreadID($thread_id)
+    {
+        try
+        {
+            $sql = "SELECT * FROM $this->dbTableThreadReply WHERE " . self::$thread_reply . " = ? ORDER BY " . self::$reply_time . " DESC";
+            $params = array($thread_id);
+
+            $query = $this->db->prepare($sql);
+            $query->execute($thread_id);  
+
+            $result = $query->fetchAll();
+
+            if (!$result)
+                return null;
+
+            $replies = Array();
+
+            foreach($result as $row)
+            {
+                $reply = new Thread($row[self::$thread_id], $row[self::$body], $row[self::$user]);
+                array_push($replies, $reply);
+            }
+
+            return $replies;
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 787");
+        }
+    }
+
+    public function AddReplyToThread()
+    {
+
+    }
+
+    public function RemoveReply()
+    {
+
     }
 }
