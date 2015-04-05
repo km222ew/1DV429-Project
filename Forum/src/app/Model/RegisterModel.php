@@ -33,10 +33,10 @@ class RegisterModel
             $this->notify->error('Username needs at least 3 characters and 25 at max.');
         }
 
-        if(strlen($password) < 6)
+        if(strlen($password) < 6 || strlen($password) > 60)
         {
             $clearForRegistration = false;
-            $this->notify->error('Password needs at least 6 characters');
+            $this->notify->error('Password needs at least 6 characters and 60 at max');
         }
 
         //Check if username contains invalid characters

@@ -28,15 +28,7 @@ class NavigationController
             if($this->loginModel->IsLoggedIn($loginView->getUserAgent(), $loginView->getUserIp()))
             {
                 $username = $this->loginModel->getUsername();
-
-                //If on another page than play (where you play), remove any trivia from session to combat any cheating (like going back to buy new lifelines)
-                // if(NavigationView::getAction() != NavigationView::$actionPlay)
-                // {
-                //     $controller = new GameController($notify, $userRep);
-
-                //     $controller->removeTrivia();
-                // }
-
+                
                 switch(NavigationView::getAction())
                 {
                     case NavigationView::$actionShowProfile:
@@ -69,8 +61,8 @@ class NavigationController
                             return $controller->ShowAllUsers();
                         }
                     default:
-                        $controller = new ProfileController($notify, $userRep);
-                        return $controller->showProfile($username);
+                        $controller = new ForumController($notify, $userRep);
+                        return $controller->showForum($this->IsModOrHigher(), $username);
                 }
             }
             else

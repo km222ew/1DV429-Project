@@ -27,4 +27,9 @@ class Reply
 	{	
 		return $this->user;
 	}
+
+	public function SetBody($body)
+	{	
+		return $this->body = $body;;
+	}
 }

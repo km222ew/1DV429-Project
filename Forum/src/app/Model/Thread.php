@@ -27,4 +27,9 @@ class Thread
 	{	
 		return $this->creator;
 	}
+
+	public function SetTopic($topic)
+	{
+		$this->topic = $topic;
+	}
 }

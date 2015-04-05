@@ -63,15 +63,12 @@ class RegisterView
 
     public function register() {
 
-        //Replaces all invalid characters with '' and puts the remainder in input
-        // $printUsername = preg_replace('/[^a-zåäöA-ZÅÄÖ0-9]/', '', $printUsername);
-
         $body = "
 				<form action='?action=$this->register' class='form-signin' method='post'>
 						<h2 class='form-signin-heading'>Please fill in Username and Password</h2>
-						<input type='text' class='form-control input-lg marginb' placeholder='Username' id=$this->regUsername name=$this->regUsername value='' required autofocus>
-						<input type='password' class='form-control input-lg marginb' placeholder='Password' id=$this->regPassword name=$this->regPassword autofocus>
-						<input type='password' class='form-control input-lg marginb' placeholder='Repeat Password' id=$this->repRegPassword name=$this->repRegPassword autofocus>
+						<input type='text' class='form-control input-lg marginb' placeholder='Username' id=$this->regUsername name=$this->regUsername value='' maxlength='25' required autofocus>
+						<input type='password' class='form-control input-lg marginb' placeholder='Password' id=$this->regPassword name=$this->regPassword  maxlength='60' autofocus>
+						<input type='password' class='form-control input-lg marginb' placeholder='Repeat Password' id=$this->repRegPassword name=$this->repRegPassword  maxlength='60' autofocus>
 						<div class='row'>
                             <div class='col-lg-6'>
                                 <a href='index.php' class='btn btn-primary btn-block'>Back</a>

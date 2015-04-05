@@ -99,8 +99,8 @@ class LoginView {
 		$body = "
 				<form action='?action=".NavigationView::$actionShowProfile."' class='form-signin' method='post'>
 					    <h2 class='form-signin-heading'>Please sign in</h2>
-						<input type='text' class='form-control input-lg marginb' placeholder='Username' id=$this->username name=$this->username value='' required autofocus>
-						<input type='password' class='form-control input-lg marginb' placeholder='Password' id=$this->password name=$this->password required>
+						<input type='text' class='form-control input-lg marginb' placeholder='Username' id=$this->username name=$this->username value='' maxlength='25' required autofocus>
+						<input type='password' class='form-control input-lg marginb' placeholder='Password' id=$this->password name=$this->password  maxlength='60' required>
                         <div class='row'>
                             <div class='col-lg-6'>
                                 <a href='?action=".NavigationView::$actionRegister."' class='btn btn-primary btn-block'>Register</a>

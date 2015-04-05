@@ -31,4 +31,9 @@ class NavigationView
     {
         header('Location: ?'.NavigationView::$action.'='.NavigationView::$actionShowProfile.'');
     }
+
+    public static function redirectForum()
+    {
+        header('Location: ?'.NavigationView::$action.'='.NavigationView::$actionForum.'');
+    }
 }

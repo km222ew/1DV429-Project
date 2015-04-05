@@ -73,22 +73,6 @@ class UserRepository extends Repository
     {
         try
         {
-            // $sql = "SELECT * FROM $this->dbTable WHERE " . self::$username . "= ?";
-            // $params = array($username);
-
-            // $query = $this->db->prepare($sql);
-            // $query->execute($params);
-
-            // $result = $query->fetch();
-
-            // $sql = "SELECT " . self::$role_id . " FROM $this->dbTableRole WHERE " . self::$username . "= ?";
-            // $params = array($username);
-
-            // $query = $this->db->prepare($sql);
-            // $query->execute($params);
-
-            // $result2 = $query->fetch();
-
             $sql = "SELECT * FROM $this->dbTable d INNER JOIN $this->dbTableRole c ON d." . self::$username . "=c." . self::$username . " WHERE " . "d." . self::$username . " = ?";
             $params = array($username);
 
@@ -301,25 +285,54 @@ class UserRepository extends Repository
         }
     }
 
-    public function RemoveThread()
+    public function GetThread($thread_id)
     {
+        try
+        {
+            $sql = "SELECT * FROM $this->dbTableThread WHERE " . self::$thread_id . " = ?";
+            $params = array($thread_id);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);  
+
+            $result = $query->fetch();
+
+            if ($result)
+                return new Thread($result[self::$thread_id], $result[self::$topic], $result[self::$creator]);
+
+            return null;
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 915");
+        }
     }
 
-    public function GetThread()
+    public function RemoveThread($thread_id)
     {
+        try
+        {
+            $sql = "DELETE FROM $this->dbTableThread WHERE " . self::$thread_id . " = ?";
+            $params = array($thread_id);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);  
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 955");
+        }
     }
 
     public function GetRepliesOnThreadID($thread_id)
     {
         try
         {
-            $sql = "SELECT * FROM $this->dbTableThreadReply WHERE " . self::$thread_reply . " = ? ORDER BY " . self::$reply_time . " DESC";
+            $sql = "SELECT * FROM $this->dbTableThreadReply WHERE " . self::$thread_id . " = ? ORDER BY " . self::$reply_time . " ASC";
             $params = array($thread_id);
 
             $query = $this->db->prepare($sql);
-            $query->execute($thread_id);  
+            $query->execute($params);  
 
             $result = $query->fetchAll();
 
@@ -330,7 +343,7 @@ class UserRepository extends Repository
 
             foreach($result as $row)
             {
-                $reply = new Thread($row[self::$thread_id], $row[self::$body], $row[self::$user]);
+                $reply = new Reply($row[self::$thread_id], $row[self::$body], $row[self::$user]);
                 array_push($replies, $reply);
             }
 
@@ -342,12 +355,23 @@ class UserRepository extends Repository
         }
     }
 
-    public function AddReplyToThread()
+    public function AddReplyToThread($thread_id, $body, $user)
     {
+        try
+        {
+            $sql = "INSERT INTO $this->dbTableThreadReply (". self::$thread_id . ", " . self::$body . ", " . self::$user . ") VALUES (?, ?, ?)";
+            $params = array($thread_id, $body, $user);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 737");
+        }
     }
 
-    public function RemoveReply()
+    public function RemoveReply($reply_id)
     {
 
     }

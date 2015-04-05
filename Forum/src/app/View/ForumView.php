@@ -7,10 +7,61 @@ class ForumView
 	private static $create_thread = "create_new_thread";
 	private static $topic = "topic";
 	private static $body = "body";
+	private static $id = "id";
+	private static $reply = "reply";
+	private static $remove = "remove";
 
 	public function __construct(Notify $notify)
     {
         $this->notify = $notify;
+    }
+
+    public function AdminDidRemoveThread()
+    {
+    	if (isset($_POST[self::$remove]))
+    		return true;
+
+    	return false;
+    }
+
+    public function GetThreadIdForRemove()
+    {
+    	if (isset($_POST[self::$id]))
+    		return $_POST[self::$id];
+
+    	return null;
+    }
+
+    public function TopicWasSelected()
+    {
+    	if (isset($_GET[self::$id]))
+    		return true;
+
+    	return false;
+    }
+
+    public function GetSelectedId()
+    {
+    	if (isset($_GET[self::$id]))
+    		return $_GET[self::$id];
+
+    	return null;
+    }
+
+    public function DidUserPostReply()
+    {
+    	if (isset($_POST[self::$reply]))
+    		return true;
+
+    	return false;
+    }
+
+    public function GetReplyBody()
+    {
+    	if (isset($_POST[self::$body]))
+    		return $_POST[self::$body];
+
+    	return null;
     }
 
     public function DidUserCreateThread()
@@ -83,18 +134,18 @@ class ForumView
             "<div class='row height'>
                 <form role='form' action='' method='post'>
                     <div class='col-lg-5'>
-                       <h4><a href='?action=". NavigationView::$actionTopic ."&id=".$thread->GetThreadId()."'>$topic</a></h4>
+                       <h4><a href='?action=". NavigationView::$actionTopic ."&".self::$id."=".$thread->GetThreadId()."'>$topic</a></h4>
                     </div>
                     <div class='col-lg-5'>
                         <h4>$creator</h4>
                     </div>";
-                    
-                        // if ($hasModRights)
-                        // {
-                        //     $HTML .= 
-                        //             "<div class='col-lg-2'><button type='submit' name='".self::$demote."' class='btn btn-primary btn-block' value='Demote'>Demote</button>
-                        //             </div>";
-                        // }
+                        if ($hasModRights)
+                        {
+                            $HTML .= 
+                                    "<input type='hidden' value='".$thread->GetThreadId()."' name='".self::$id."'></input>
+                                    <div class='col-lg-2'><button type='submit' name='".self::$remove."' class='btn btn-primary btn-block' value='Remove'>Remove thread</button>
+                                    </div>";
+                        }
                         $HTML .=
                         "   
                 </form>
@@ -108,9 +159,43 @@ class ForumView
     {
     	$HTML = 
     			"<form role='form' action='' method='post' class='form-signin'>
-    				<input type='text' class='form-control input-lg marginb' name='".self::$topic."' placeholder='Topic' required autofocus></input>
-    				<textarea name='".self::$body."' class='form-control input-lg marginb' placeholder='Content' required></textarea>
+    				<input type='text' class='form-control input-lg marginb' name='".self::$topic."' placeholder='Topic'  maxlength='100' required autofocus></input>
+    				<textarea name='".self::$body."' class='form-control input-lg marginb' placeholder='Content'  maxlength='3000' required></textarea>
     				<input type='submit' class='btn btn-primary btn-block' value='Create thread' name='".self::$create_thread."'></input>
+    			</form>
+    			";
+
+    	return $HTML;
+    }
+
+    public function RenderSelectedTopic($topic, $topicReplies)
+    {
+    		$HTML = "
+    				<div class='panel panel-primary'>
+					  <div class='panel-heading'>
+					    <h2 class='panel-title panel-title-size'><b>Topic: ".$topic->GetTopic()."</b></h2>
+					  </div>
+					</div>";
+
+    	foreach($topicReplies as $reply)
+    	{
+    		$HTML .= 
+    				"<div class='panel panel-info'>
+					  <div class='panel-heading'>
+					    <h3 class='panel-title'>Posted by: ".$reply->GetUser()."</h3>
+					  </div>
+					  <div class='panel-body'>
+					    ".$reply->GetBody()."
+					  </div>
+					</div>
+    				";
+    	}
+
+    	$HTML .=
+    			"<form role='form' action='' method='post' class='form-signin'>
+    				<h3>Reply to thread</h3>
+    				<textarea name='".self::$body."' class='form-control input-lg marginb' placeholder='Reply content'  maxlength='3000' required></textarea>
+    				<input type='submit' class='btn btn-primary btn-block' value='Reply' name='".self::$reply."'></input>
     			</form>
     			";
 

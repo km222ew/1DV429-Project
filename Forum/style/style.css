@@ -6,7 +6,12 @@
 .border{border: solid 1px}
 .form-signin{max-width: 500px; margin:auto;}
 .paddingt{padding-top: 40px;}
+.reset-padding{padding: 0px;}
 .height{height: 40px;}
+.panel-width{width: 60%;}
+.center-panels{margin: auto;}
+.panel-title-size{font-size: 26px;}
+textarea{resize: vertical;}
 
 
 #gameContainer
