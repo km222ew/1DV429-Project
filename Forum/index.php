@@ -23,4 +23,4 @@ $navigationController = new NavigationController();
 //Have to do this because the webhost complained about too many connections used and I had limited time.
 $userRep = new UserRepository();
 
-$response->HTMLPage($navigationController->doControl($notify, $userRep), $notifyView, $navigationController->GetLoginStatus(), $navigationController->IsAdmin());
+$response->HTMLPage($navigationController->doControl($notify, $userRep), $notifyView, $navigationController->GetUsername(), $navigationController->IsAdmin());

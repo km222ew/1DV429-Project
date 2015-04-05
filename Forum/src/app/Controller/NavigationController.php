@@ -56,9 +56,8 @@ class NavigationController
                         $controller = new AdminController($notify, $userRep);
 
                         if ($this->IsAdmin())
-                        {
-                            
-                            return $controller->ShowAllUsers();
+                        {                            
+                            return $controller->ShowAllUsers($username);
                         }
                     default:
                         $controller = new ForumController($notify, $userRep);
@@ -80,9 +79,9 @@ class NavigationController
         return $loginController->doLogin();
     }
 
-    public function GetLoginStatus()
+    public function GetUsername()
     {
-        return $this->loginModel->getUsername() != '';
+        return $this->loginModel->getUsername();
     }
 
     public function IsAdmin()

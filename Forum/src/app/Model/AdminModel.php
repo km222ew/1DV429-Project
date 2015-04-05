@@ -23,6 +23,22 @@ class AdminModel
         return $user;
     }
 
+    public function GetAdminRole($username)
+    {
+        $user = $this->getUserData($username);
+
+        if ($user == null) 
+        {
+            return false;
+        }
+
+        if ($user->getRole() == ROLE::$ADMIN) 
+        {
+            return false;
+        }
+        return true;
+    }
+
     public function GetAllUsers()
     {
         return $this->userRep->GetAllUsers();

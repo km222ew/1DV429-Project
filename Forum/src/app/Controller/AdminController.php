@@ -16,19 +16,18 @@ class AdminController
 
     public function ShowAllUsers()
     {
-
-        if ($this->adminView->AdminDidPromote())
+                    
+        if ($this->adminView->AdminDidPromote() && $this->adminModel->GetAdminRole($this->adminView->GetUsername()))
         {
             $this->adminModel->PromoteUser($this->adminView->GetUsername());
             NavigationView::redirectShowAllUsers();
         }
 
-        if ($this->adminView->AdminDidDemote())
+        if ($this->adminView->AdminDidDemote() && $this->adminModel->GetAdminRole($this->adminView->GetUsername()))
         {
             $this->adminModel->DemoteUser($this->adminView->GetUsername());
             NavigationView::redirectShowAllUsers();
         }
-
         $users = $this->adminModel->GetAllUsers();
 
 

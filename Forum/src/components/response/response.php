@@ -30,7 +30,15 @@ class Response
 			<body>
                 <div class='container'>
                     <div class='page-header'>
-                      <h1>Welcome!</h1>
+                      <h1>Welcome ";
+                      if ($isLoggedIn != '')
+						{
+							$HTML .= "
+							<b>$isLoggedIn</b>!
+							";
+						}
+						$HTML .=
+						"</h1>
                       <div class='row'>
                       	<div class='col-lg-10'>
 	                      <ul class='nav nav-pills'>
@@ -43,7 +51,7 @@ class Response
 					    $HTML .= "
 					    	</ul>
 						</div>";
-						if ($isLoggedIn)
+						if ($isLoggedIn != '')
 						{
 							$HTML .= "
 							<div class='col-lg-2'>

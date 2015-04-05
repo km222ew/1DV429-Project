@@ -51,41 +51,41 @@ class AdminView
                 </div>
                 <hr/>
                 ";
+        if ($users != null) 
+            foreach($users as $user)
+            {
+                $username = $user->getUsername();
+                $role = $user->getRole();
 
-        foreach($users as $user)
-        {
-            $username = $user->getUsername();
-            $role = $user->getRole();
-
-            $HTML .= 
-            "<div class='row height'>
-                <form role='form' action='' method='post'>
-                    <div class='col-lg-5'>
-                        <input type='hidden' name='".self::$username."' value='$username'>
-                       <h4>$username</h4>
-                    </div>
-                    <div class='col-lg-5'>
-                        <input type='hidden' name='role' value='$role'>
-                        <h4>".ROLE::IdToName($role)."</h4>
-                    </div>";
-                    
-                        if ($role == ROLE::$MODERATOR)
-                        {
-                            $HTML .= 
-                                    "<div class='col-lg-2'><button type='submit' name='".self::$demote."' class='btn btn-primary btn-block' value='Demote'>Demote</button>
-                                    </div>";
-                        }
-                        else if ($role == ROLE::$USER)
-                        {
-                            $HTML .= 
-                                    "<div class='col-lg-2'><button type='submit' name='".self::$promote."' class='btn btn-primary btn-block' value='Promote'>Promote</button>
-                                    </div>";
-                        }
-                        $HTML .=
-                        "   
-                </form>
-            </div>";
-        }
+                $HTML .= 
+                "<div class='row height'>
+                    <form role='form' action='' method='post'>
+                        <div class='col-lg-5'>
+                            <input type='hidden' name='".self::$username."' value='$username'>
+                           <h4>$username</h4>
+                        </div>
+                        <div class='col-lg-5'>
+                            <input type='hidden' name='role' value='$role'>
+                            <h4>".ROLE::IdToName($role)."</h4>
+                        </div>";
+                        
+                            if ($role == ROLE::$MODERATOR)
+                            {
+                                $HTML .= 
+                                        "<div class='col-lg-2'><button type='submit' name='".self::$demote."' class='btn btn-primary btn-block' value='Demote'>Demote</button>
+                                        </div>";
+                            }
+                            else if ($role == ROLE::$USER)
+                            {
+                                $HTML .= 
+                                        "<div class='col-lg-2'><button type='submit' name='".self::$promote."' class='btn btn-primary btn-block' value='Promote'>Promote</button>
+                                        </div>";
+                            }
+                            $HTML .=
+                            "   
+                    </form>
+                </div>";
+            }
 
         return $HTML;
     }

@@ -184,6 +184,11 @@ class UserRepository extends Repository
             $query = $this->db->prepare($sql);
             $query->execute($params);
 
+            if ($query->rowCount() < 1) 
+            {
+                return false;
+            }
+
             return true;
         }
         catch(PDOException $e)
@@ -363,7 +368,7 @@ class UserRepository extends Repository
             $result = $query->fetch();
 
             if ($result)
-                return new Reply($result[self::$reply_id], $result[self::$thread_id], $result[self::$topic], $result[self::$creator]);
+                return new Reply($result[self::$reply_id], $result[self::$thread_id], $result[self::$body], $result[self::$user]);
 
             return null;
         }
@@ -449,7 +454,7 @@ class UserRepository extends Repository
         }
         catch(PDOException $e)
         {
-            die("An error has occurred. Error code 737");
+            die("An error has occurred. Error code 710");
         }
     }
 
@@ -465,7 +470,7 @@ class UserRepository extends Repository
         }
         catch(PDOException $e)
         {
-            die("An error has occurred. Error code 737");
+            die("An error has occurred. Error code 720");
         }
     }
 
@@ -481,7 +486,7 @@ class UserRepository extends Repository
         }
         catch(PDOException $e)
         {
-            die("An error has occurred. Error code 737");
+            die("An error has occurred. Error code 730");
         }
     }
 }

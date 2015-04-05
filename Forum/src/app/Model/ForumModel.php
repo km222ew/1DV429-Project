@@ -92,6 +92,12 @@ class ForumModel
     {
     	$thread = $this->userRep->GetThread($thread_id);
 
+        if ($thread == null) 
+        {
+            $this->notify->error("Invalid thread");
+            return;
+        }
+
     	$replies = $this->userRep->GetRepliesOnThreadID($thread_id);
 
     	$this->userRep->RemoveThread($thread_id);
@@ -110,7 +116,13 @@ class ForumModel
 
     public function RemoveReply($reply_id, $username)
     {
-    	$reply = $this->userRep->GetReply($thread_id);
+    	$reply = $this->userRep->GetReply($reply_id);
+
+        if ($reply == null) 
+        {
+            $this->notify->error("Invalid reply");
+            return;
+        }
 
     	$this->userRep->RemoveReply($reply_id);
 
