@@ -20,14 +20,20 @@ class ForumController
 		if ($this->forumView->DidUserCreateThread() != null)
     	{
     		$thread = new Thread(null, $this->forumView->GetTopic(), $username);
-    		$reply = new Reply(null, $this->forumView->GetBody(), $username);
+    		$reply = new Reply(null, null, $this->forumView->GetBody(), $username);
     		$this->forumModel->CreateThread($thread, $reply);
     		NavigationView::redirectForum();
     	}
 
     	if ($this->forumView->AdminDidRemoveThread())
     	{
-    		$this->forumModel->RemoveThread($this->forumView->GetThreadIdForRemove());
+    		$this->forumModel->RemoveThread($this->forumView->GetThreadIdForRemove(), $username);
+    		NavigationView::redirectForum();
+    	}
+
+    	if ($this->forumView->AdminDidRemoveReply())
+    	{
+    		$this->forumModel->RemoveReply($this->forumView->GetReplyIdForRemove(), $username);
     		NavigationView::redirectForum();
     	}
 
@@ -41,7 +47,7 @@ class ForumController
     		$thread_id = $this->forumView->GetSelectedId();
     		$this->forumModel->ValidateAndPostReply($thread_id, $this->forumView->GetReplyBody(), $username);
     		header("Location: " . $_SERVER['REQUEST_URI']);
-    		return $this->forumView->RenderSelectedTopic($this->forumModel->GetTopic($thread_id), $this->forumModel->GetTopicReplies($thread_id));
+    		return $this->forumView->RenderSelectedTopic($this->forumModel->GetTopic($thread_id), $this->forumModel->GetTopicReplies($thread_id), $hasModRights);
     	}
 
     	if ($this->forumView->TopicWasSelected())
@@ -53,7 +59,7 @@ class ForumController
     		if (!$topic)
     			return $this->forumView->RenderForum($hasModRights, $this->forumModel->GetAllThreads());
 
-    		return $this->forumView->RenderSelectedTopic($topic, $this->forumModel->GetTopicReplies($thread_id));
+    		return $this->forumView->RenderSelectedTopic($topic, $this->forumModel->GetTopicReplies($thread_id), $hasModRights);
     	}
 
     	//If thread id is set, show the thread instead.

@@ -2,15 +2,22 @@
 
 class Reply
 {
+	private $reply_id;
 	private $thread_id;
 	private $body;
 	private $user;
 
-	public function __construct($thread_id, $body, $user)
+	public function __construct($reply_id, $thread_id, $body, $user)
 	{
+		$this->reply_id = $reply_id;
 		$this->thread_id = $thread_id;
 		$this->body = $body;
 		$this->user = $user;
+	}
+
+	public function GetReplyId()
+	{
+		return $this->reply_id;
 	}
 
 	public function GetThreadId()

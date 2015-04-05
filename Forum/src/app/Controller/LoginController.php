@@ -59,7 +59,7 @@ class LoginController {
             //Validate credentials (post)
             if ($this->validateLogin())
             {
-                $this->view->redirect("?action=".NavigationView::$actionShowProfile);
+                $this->view->redirect("?action=".NavigationView::$actionForum);
             }
         }
         else if ($this->view->didLogin())

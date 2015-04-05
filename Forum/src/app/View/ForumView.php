@@ -10,10 +10,28 @@ class ForumView
 	private static $id = "id";
 	private static $reply = "reply";
 	private static $remove = "remove";
+	private static $remove_reply = "remove_reply";
+	private static $reply_id = "reply_id";
 
 	public function __construct(Notify $notify)
     {
         $this->notify = $notify;
+    }
+
+    public function AdminDidRemoveReply()
+    {
+    	if (isset($_POST[self::$remove_reply]))
+    		return true;
+
+    	return false;
+    }
+
+    public function GetReplyIdForRemove()
+    {
+    	if (isset($_POST[self::$reply_id]))
+    		return $_POST[self::$reply_id];
+
+    	return null;
     }
 
     public function AdminDidRemoveThread()
@@ -141,9 +159,9 @@ class ForumView
                     </div>";
                         if ($hasModRights)
                         {
-                            $HTML .= 
+                            $HTML .=
                                     "<input type='hidden' value='".$thread->GetThreadId()."' name='".self::$id."'></input>
-                                    <div class='col-lg-2'><button type='submit' name='".self::$remove."' class='btn btn-primary btn-block' value='Remove'>Remove thread</button>
+                                    <div class='col-lg-2'><button type='submit' name='".self::$remove."' class='btn btn-primary btn-block' value='Remove'>Delete thread</button>
                                     </div>";
                         }
                         $HTML .=
@@ -168,7 +186,7 @@ class ForumView
     	return $HTML;
     }
 
-    public function RenderSelectedTopic($topic, $topicReplies)
+    public function RenderSelectedTopic($topic, $topicReplies, $hasModRights)
     {
     		$HTML = "
     				<div class='panel panel-primary'>
@@ -177,19 +195,39 @@ class ForumView
 					  </div>
 					</div>";
 
-    	foreach($topicReplies as $reply)
-    	{
-    		$HTML .= 
-    				"<div class='panel panel-info'>
-					  <div class='panel-heading'>
-					    <h3 class='panel-title'>Posted by: ".$reply->GetUser()."</h3>
-					  </div>
-					  <div class='panel-body'>
-					    ".$reply->GetBody()."
-					  </div>
-					</div>
-    				";
-    	}
+		if ($topicReplies != null)
+	    	foreach($topicReplies as $reply)
+	    	{
+	    		$HTML .= 
+	    				"<div class='panel panel-info'>
+						  <div class='panel-heading'>
+						    <div class='row'>
+						    	<div class='col-lg-10'>
+						    		<h3 class='panel-title'>Posted by: ".$reply->GetUser()."</h3>
+						    	</div>
+					    ";
+
+						   	if ($hasModRights)
+	                        {
+	                            $HTML .= 
+	                                    "
+	                                    <form role='form' action='' method='post'>
+		                                    <input type='hidden' value='".$reply->GetReplyId()."' name='".self::$reply_id."'></input>
+		                                    <div class='col-lg-2'><button type='submit' name='".self::$remove_reply."' class='btn btn-primary btn-block' value='Remove'>Delete reply</button></div>
+	                                	</form>
+	                                	";
+	                        }
+
+		    	$HTML .=
+					    "</div>
+						  </div>
+						  <div class='panel-body'>
+						    ".$reply->GetBody()."
+						  </div>
+						</div>
+
+	    				";
+	    	}
 
     	$HTML .=
     			"<form role='form' action='' method='post' class='form-signin'>

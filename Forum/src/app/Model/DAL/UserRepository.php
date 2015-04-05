@@ -10,6 +10,9 @@ class UserRepository extends Repository
     private $dbTableLoginLog;
     private $dbTableThread;
     private $dbTableThreadReply;
+    private $dbTablePasswordLog;
+    private $dbTableReplyLog;
+    private $dbTableThreadLog;
 
     //Db columns 'user'
     private static $username = "username";
@@ -31,10 +34,30 @@ class UserRepository extends Repository
     private static $creation_time = "creation_time";
 
     //DB columns 'thread_reply'
+    private static $reply_id = "reply_id";
     private static $thread_id = "thread_id";
     private static $body = "body";
     private static $user = "user";
     private static $reply_time = "reply_time";
+
+    //DB columns 'password_change_log'
+    private static $pcl_id = "pcl_id";
+    private static $time_of_occurance = "time_of_occurance";
+    //"useranme"
+    private static $ip_adress = "ip_adress";
+
+    //DB columns 'reply_removal_log'
+    private static $rr_id = "rr_id";
+    //"thread_id"
+    //"body"
+    //"useranme"
+    //"time_of_occurance"
+
+    //DB columns 'password_change_log'
+    private static $r_id = "tr_id";
+    //"topic"
+    //"useranme"
+    //"time_of_occurance"
 
     public function __construct()
     {
@@ -43,6 +66,9 @@ class UserRepository extends Repository
         $this->dbTableLoginLog = "user_login_log";
         $this->dbTableThread = "thread";
         $this->dbTableThreadReply = "thread_reply";
+        $this->dbTablePasswordLog = "password_change_log";
+        $this->dbTableReplyLog = "reply_removal_log";
+        $this->dbTableThreadLog = "topic_removal_log";
         $this->db = $this->connectionUser();
     }
 
@@ -324,6 +350,29 @@ class UserRepository extends Repository
         }
     }
 
+    public function GetReply($reply_id)
+    {
+        try
+        {
+            $sql = "SELECT * FROM $this->dbTableThreadReply WHERE " . self::$reply_id . " = ?";
+            $params = array($reply_id);
+
+            $query = $this->db->prepare($sql);
+            $query->execute($params);  
+
+            $result = $query->fetch();
+
+            if ($result)
+                return new Reply($result[self::$reply_id], $result[self::$thread_id], $result[self::$topic], $result[self::$creator]);
+
+            return null;
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 915");
+        }
+    }
+
     public function GetRepliesOnThreadID($thread_id)
     {
         try
@@ -343,7 +392,7 @@ class UserRepository extends Repository
 
             foreach($result as $row)
             {
-                $reply = new Reply($row[self::$thread_id], $row[self::$body], $row[self::$user]);
+                $reply = new Reply($row[self::$reply_id], $row[self::$thread_id], $row[self::$body], $row[self::$user]);
                 array_push($replies, $reply);
             }
 
@@ -373,6 +422,66 @@ class UserRepository extends Repository
 
     public function RemoveReply($reply_id)
     {
+        try
+        {
+            $sql = "DELETE FROM $this->dbTableThreadReply WHERE " . self::$reply_id . " = ?";
+            $params = array($reply_id);
 
+            $query = $this->db->prepare($sql);
+            $query->execute($params);  
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 721");
+        }
+    }
+
+    //logging
+    public function PasswordChangeLog($username, $ip_adress)
+    {
+        try
+        {
+            $sql = "INSERT INTO $this->dbTablePasswordLog (" . self::$username . ", " . self::$ip_adress . ") VALUES (?, ?)";
+            $params = array($username, $ip_adress);
+
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 737");
+        }
+    }
+
+    public function TopicRemovalLog($topic, $username)
+    {
+        try
+        {
+            $sql = "INSERT INTO $this->dbTableThreadLog (" . self::$topic . ", " . self::$username . ") VALUES (?, ?)";
+            $params = array($topic, $username);
+
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 737");
+        }
+    }
+
+    public function ReplyRemovalLog($thread_id, $body, $username)
+    {
+        try
+        {
+            $sql = "INSERT INTO $this->dbTableReplyLog (" . self::$thread_id . ", " . self::$body . ", " . self::$username . ") VALUES (?, ?, ?)";
+            $params = array($thread_id, $body, $username);
+
+            $query = $this->db->prepare($sql);
+            $query->execute($params);
+        }
+        catch(PDOException $e)
+        {
+            die("An error has occurred. Error code 737");
+        }
     }
 }

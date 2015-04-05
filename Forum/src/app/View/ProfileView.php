@@ -58,7 +58,7 @@ class ProfileView
     {
         $body = "<div class='row'><div class='col-lg-10'><h2>This is where you change your password.</h2></div></div>
                 <hr/>
-                <form action='?action=$this->edit' class='form-signin' method='post'>
+                <form action='' class='form-signin' method='post'>
                         <h2 class='form-signin-heading'>Please enter a new password.</h2>
                         <input type='password' class='form-control input-lg marginb' placeholder='Current Password' id=$this->currentPassword name=$this->currentPassword required autofocus>
                         <input type='password' class='form-control input-lg marginb' placeholder='Password' id=$this->editPassword name=$this->editPassword required>

@@ -57,7 +57,9 @@ class ProfileModel
 
 
         if ($clearForChange && $this->userRep->UpdateUserPassword($username, password_hash($password, PASSWORD_BCRYPT)))
-            $this->notify->success('You password was changed, please login with your new password.');
+            $this->notify->success('Your password was changed, please login with your new password.');
+
+        $this->userRep->PasswordChangeLog($username, $_SESSION['userIp']);
         
         return $clearForChange;
     }
