@@ -1,0 +1,177 @@
+phpMyAdmin SQL Dump
+-- version 4.1.4
+-- http://www.phpmyadmin.net
+--
+-- Värd: 127.0.0.1
+-- Tid vid skapande: 05 apr 2015 kl 19:56
+-- Serverversion: 5.6.15-log
+-- PHP-version: 5.5.8
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET time_zone = "+00:00";
+
+--
+-- Databas: `userdb`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `password_change_log`
+--
+
+CREATE TABLE IF NOT EXISTS `password_change_log` (
+  `pcl_id` int(11) NOT NULL AUTO_INCREMENT,
+  `time_of_occurance` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `username` varchar(25) NOT NULL,
+  `ip_adress` varchar(20) NOT NULL,
+  PRIMARY KEY (`pcl_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `reply_removal_log`
+--
+
+CREATE TABLE IF NOT EXISTS `reply_removal_log` (
+  `rr_id` int(11) NOT NULL AUTO_INCREMENT,
+  `thread_id` int(11) NOT NULL,
+  `body` varchar(3000) NOT NULL,
+  `username` varchar(25) NOT NULL,
+  `time_of_occurance` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`rr_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `role`
+--
+
+CREATE TABLE IF NOT EXISTS `role` (
+  `role_id` int(11) NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(50) NOT NULL,
+  `role_description` varchar(50) NOT NULL,
+  PRIMARY KEY (`role_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=4 ;
+
+--
+-- Dumpning av Data i tabell `role`
+--
+
+INSERT INTO `role` (`role_id`, `role_name`, `role_description`) VALUES
+(1, 'Admin', 'Admin'),
+(2, 'Moderator', 'A moderator'),
+(3, 'User', 'User');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `thread`
+--
+
+CREATE TABLE IF NOT EXISTS `thread` (
+  `thread_id` int(11) NOT NULL AUTO_INCREMENT,
+  `topic` varchar(100) NOT NULL,
+  `creator` varchar(25) NOT NULL,
+  `creation_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`thread_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=13 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `thread_reply`
+--
+
+CREATE TABLE IF NOT EXISTS `thread_reply` (
+  `reply_id` int(11) NOT NULL AUTO_INCREMENT,
+  `thread_id` int(11) NOT NULL,
+  `body` varchar(3000) NOT NULL,
+  `user` varchar(25) NOT NULL,
+  `reply_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`reply_id`),
+  KEY `thread_id` (`thread_id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=32 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `topic_removal_log`
+--
+
+CREATE TABLE IF NOT EXISTS `topic_removal_log` (
+  `tr_log` int(11) NOT NULL AUTO_INCREMENT,
+  `topic` varchar(100) NOT NULL,
+  `username` varchar(25) NOT NULL,
+  `time_of_occurance` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`tr_log`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `user`
+--
+
+CREATE TABLE IF NOT EXISTS `user` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(25) NOT NULL,
+  `password` varchar(100) NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=14 ;
+
+--
+-- Dumpning av Data i tabell `user`
+--
+
+INSERT INTO `user` (`id`, `username`, `password`) VALUES
+(1, 'admin', '$2y$10$Z8mxOVo62KdVpAgvO0L9ye/cs.OnFkeCMElNdtq0UlaKMuZJrJCRO');
+
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `user_login_log`
+--
+
+CREATE TABLE IF NOT EXISTS `user_login_log` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(25) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `outcome` int(1) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=66 ;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `user_role`
+--
+
+CREATE TABLE IF NOT EXISTS `user_role` (
+  `username` varchar(25) NOT NULL,
+  `role_id` int(11) NOT NULL DEFAULT '3',
+  KEY `user_id` (`username`),
+  KEY `role_id` (`role_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumpning av Data i tabell `user_role`
+--
+
+INSERT INTO `user_role` (`username`, `role_id`) VALUES
+('admin', 1);
+
+
+--
+-- Restriktioner för dumpade tabeller
+--
+
+--
+-- Restriktioner för tabell `thread_reply`
+--
+ALTER TABLE `thread_reply`
+  ADD CONSTRAINT `thread_reply_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `thread` (`thread_id`) ON DELETE CASCADE;
